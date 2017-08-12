@@ -30,7 +30,7 @@ Ommiting the fact that the design of collections itself is heavily criticized in
 While C# have similarly good experience, it achieves it differently - with the so call Language Intergrated Query(LINQ).
 
 Lets assume we have a collection of people(Person) and we want to operate on that collection.
-Both languages provide unified APIs on many different collection types. ~~Scala has a quite convoluted hierarchy of traits and other tricks~~(more to read [here](https://www.scala-lang.org/blog/2017/05/30/tribulations-canbuildfrom.html)), and C# achieves a lot through extention methods(a gross over simplification).
+Both languages provide unified APIs on many different collection types. ~~Scala has a quite convoluted hierarchy of traits and other tricks~~(more to read [here](https://www.scala-lang.org/blog/2017/05/30/tribulations-canbuildfrom.html)), and C# achieves a lot through extension methods(a gross over simplification).
 
 Having a person
 {% highlight scala %}
@@ -104,7 +104,7 @@ select g
 
 In addition LINQ provides methods like `orderby` which makes it is a breeze to sort data.
 
-In both cases the "lowering" or "desugaring" can be done for whenever the object has specific methods accessible, example via extention methods or implicit classes.
+In both cases the "lowering" or "desugaring" can be done for whenever the object has specific methods accessible, example via extension methods or implicit classes.
 
 {% highlight scala %}
 case class Query()
@@ -127,7 +127,7 @@ val result = for{
 For C#
 
 {% highlight csharp %}
-public static class LINQQueryExtention
+public static class LINQQueryExtension
 {
    public static T Select<T>(this Query query, Func<Query, T> foo) => foo(query);
    public static T SelectMany<T>(this Query query, Func<Query, T> foo) => ...
