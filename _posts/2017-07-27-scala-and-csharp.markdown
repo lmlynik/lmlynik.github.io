@@ -14,10 +14,10 @@ The short answer is - both platforms are very similar, which I want to show in t
 C# (pronounced c-sharp) is an object oriented language with some features which are attributed to functional programming running on CLR.
 Scala is an object oriented language with some features which are attributed to functional programming running on JVM.
 
-So first thing might be surprising is both descriptions are similar, the differece is that C# emphasises OOP more then its FP features.
-Scala emphasises FP slightly more from OOP, but not as strongly as C# does it for OOP - but this is my subjective remark.
+So first thing might be surprising is both descriptions are similar, the difference is that C# emphasizes OOP more then its FP features.
+Scala emphasizes FP slightly more from OOP, but not as strongly as C# does it for OOP - but this is my subjective remark.
 
-Both languages implement concepts of a `class`, inheritence, intefaces, polymorphism and other things which are attributed to be pillars of OOP, and similarly they do it for FP even thought in C# it's a little shunned - like immutability and purity, which are considered in the C# environment as plain old "good practises".
+Both languages implement concepts of a `class`, inheritance, interfaces, polymorphism and other things which are attributed to be pillars of OOP, and similarly they do it for FP even thought in C# it's a little shunned - like immutability and purity, which are considered in the C# environment as plain old "good practices".
 
 I will skip the OOP basics and language syntax differences as there are many other resources which are talking about it.
 
@@ -26,8 +26,8 @@ I will focus on Scala 2.12 and C# 7.
 I will default to Scala syntax as most of the time its more terse.
 
 One of the more interesting things I heard about Scala is that its collections API is the best thing the person ever saw.
-Ommiting the fact that the design of collections itself is heavily criticized in the comminity, but still is focused on the the developer experience.
-While C# have similarly good experience, it achieves it differently - with the so call Language Intergrated Query(LINQ).
+Ommiting the fact that the design of collections itself is heavily criticized in the community, but still is focused on the the developer experience.
+While C# have similarly good experience, it achieves it differently - with the so call Language Integrated Query(LINQ).
 
 Lets assume we have a collection of people(Person) and we want to operate on that collection.
 Both languages provide unified APIs on many different collection types. ~~Scala has a quite convoluted hierarchy of traits and other tricks~~(more to read [here](https://www.scala-lang.org/blog/2017/05/30/tribulations-canbuildfrom.html)), and C# achieves a lot through extension methods(a gross over simplification).
@@ -36,16 +36,16 @@ Having a person
 {% highlight scala %}
 case class Person(name: String, surname: String, age: Int)
 {% endhighlight %}
-This is equivalent with having a class in C# of the same name with single constructor having all 3 params on it and providing backing fields and property getters for read-only access. There are talks to introduce Record syntax to C# in version 8. So fret not!
+This is equivalent with having a class in C# of the same name with single constructor having all 3 parameters on it and providing backing fields and property getters for read-only access. There are talks to introduce Record syntax to C# in version 8. So fret not!
 
 
 So common operations in scala would look like
 {% highlight scala %}
 val people = List(Person(.....),....)
 people.filter(p => p.age > 18)
-people.map(p => p.copy(age => p.age + 1)) //copies the class with chaning the value
-//getGroceriess(p:Person): List[Grocery]
-people.flatMap(p => getGroceriess(p)) //returns List[Grocery]
+people.map(p => p.copy(age => p.age + 1)) //copies the class with changing the value
+//getGroceries(p:Person): List[Grocery]
+people.flatMap(p => getGroceries(p)) //returns List[Grocery]
 {% endhighlight %}
 This is also a very verbose way of declaring things in Scala.
 `p => p.age > 18` can be replace with `_.age > 18` and `flatMap(p => getGroceries(p))` to `flatMap(getGroceries)`.
