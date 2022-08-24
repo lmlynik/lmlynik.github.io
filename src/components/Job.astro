@@ -1,0 +1,38 @@
+---
+export interface Props {
+	company: string;
+	from: string;
+	to?: string;
+	site?: string;
+	role: string;
+	last?: boolean;
+}
+
+const { company, from, to, site, role, last } = Astro.props as Props;
+---
+
+<style>
+	.pull-right {
+		float: right;
+	}
+
+	h4.company {
+		margin-block-end: 0px;
+	}
+</style>
+
+<section>
+	<h4 class="company">
+		<span>{company}</span>
+		<span class="date pull-right"> {from} — {to}</span>
+	</h4>
+	<div class="website pull-right">
+		<a href={site}>{site}</a>
+	</div>
+	<i class="position">{role}</i>
+	<slot name="summary" />
+	<h4>Highlights</h4>
+	<slot name="highlights" />
+</section>
+
+{!last && <hr />}

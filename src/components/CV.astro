@@ -1,0 +1,239 @@
+---
+import Job from "./Job.astro";
+import Skills from "./Skills.astro";
+
+export interface Props {
+	print?: boolean;
+}
+
+const { print } = Astro.props as Props;
+---
+
+<style>
+	.heading {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		width: 100%;
+	}
+
+	.pic {
+		flex: 30%;
+	}
+	.split {
+		flex: 5%;
+	}
+
+	.pic > img {
+		border-radius: 50px;
+	}
+
+	.aboutme {
+		flex: 60%;
+	}
+</style>
+
+<div class="heading">
+	<div class="pic">
+		<img
+			src="https://media-exp1.licdn.com/dms/image/C5603AQFpgJY4WOG_Zw/profile-displayphoto-shrink_800_800/0/1517548012868?e=1666828800&v=beta&t=y9TdIQg5dnUC3b282y8neLQaLLfe_cBLIiYXg8y3ESM"
+		/>
+	</div>
+	<div class="split"></div>
+	<div class="aboutme">
+		<h3>Łukasz Młynik</h3>
+		<p>Software maker - I make software</p>
+		<p>
+			I have around 10 years of proffesional experience and lots of silly
+			side projects. Nowadays mostly Scala, Java and sometimes .NET(C#). I
+			am passionate about my work, always looking for better ways for
+			solving current problems both for my private projects and my
+			clients.
+		</p>
+	</div>
+</div>
+
+<Skills />
+
+{print && <p style="page-break-before: always;">&nbsp;</p>}
+
+<Job
+	company="MOIA GMBH"
+	from="2021-09"
+	to="2022-07"
+	site="https://moia.io"
+	role="Senior Backend Engineer"
+>
+	<p slot="summary">
+		Development of new payment related products for core business
+	</p>
+	<ul slot="highlights">
+		<li>
+			Maintenance and development of integration system based on Scala,
+			ZIO and AWS based solutions
+		</li>
+		<li>Managing deployments with k8s</li>
+		<li>
+			Technical Design of solutions and integration to the current stack
+		</li>
+	</ul>
+</Job>
+
+<Job
+	company="Whitehat Gaming"
+	from="2020-12"
+	to="2021-09"
+	site="https://whitehatgaming.com/"
+	role="Senior Backend Engineer"
+>
+	<p slot="summary">
+		Development of new payment related products for core business
+	</p>
+	<ul slot="highlights">
+		<li>Introducing Cats and Cats Effect to the team</li>
+		<li>Managing deployments with k8s</li>
+		<li>Extending monitoring solutions using OpenTracing</li>
+		<li>
+			Technical Design of solutions and integration to the current stack
+		</li>
+		<li>Production support</li>
+	</ul>
+</Job>
+
+<Job
+	company="Kainos"
+	from="2018-09"
+	to="2021-09"
+	site="https://kainos.com/"
+	role="Senior Backend Engineer"
+>
+	<p slot="summary">
+		Development and integration of multi-vendor system in the finance sector
+	</p>
+	<ul slot="highlights">
+		<li>
+			Maintenance and development of integration system based on Java,
+			SpringBoot and Kafka
+		</li>
+		<li>Managing deployments with k8s</li>
+		<li>Extending monitoring solutions using OpenTracing</li>
+		<li>Production support</li>
+	</ul>
+</Job>
+
+{print && <p style="page-break-before: always;">&nbsp;</p>}
+
+<Job
+	company="Matchmore"
+	from="2017-07"
+	to="2018-09"
+	site="https://matchmore.com/"
+	role="Software Developer"
+>
+	<p slot="summary">
+		orking on backend Akka based SaaS platform which lets people quickly
+		build location based applications.
+	</p>
+	<ul slot="highlights">
+		<li>Maintenance and development of a Akka based SaaS platform</li>
+		<li>Managing deployments with k8s on Google Cloud</li>
+		<li>
+			Working on client SDKs in multiple fringe technologies(react native,
+			xamarin, unity 3d)
+		</li>
+	</ul>
+</Job>
+
+<Job
+	company="Noon.com"
+	from="2017-07"
+	to="2018-09"
+	site="https://noon.com/"
+	role="Tech lead"
+>
+	<p slot="summary">
+		Started as a first developer in the startup, had to grow the internal
+		capabilities in the company in terms of backed(scala) development.
+		Working with up to 80 independent contractors and managing internal
+		teams.
+	</p>
+	<ul slot="highlights">
+		<li>
+			Incorporate values from Reactive Manifesto in platform development
+		</li>
+		<li>
+			Pushed changes to increase better cooperation between frontend and
+			backend.
+		</li>
+	</ul>
+</Job>
+
+<Job
+	company="Fyber"
+	from="2016-12"
+	to="2017-07"
+	site="https://fyber.com/"
+	role="Senior Software Engineer"
+>
+	<p slot="summary">Porting a ruby based system to a scala/akka based one</p>
+	<ul slot="highlights">
+		<li>
+			Incorporate values from Reactive Manifesto in platform development
+		</li>
+		<li>
+			Pushed changes to increase better cooperation between frontend and
+			backend.
+		</li>
+	</ul>
+</Job>
+
+<Job
+	company="Kobo"
+	from="2015"
+	to="2016"
+	site="https://kobo.com/"
+	role="Senior Software Engineer"
+>
+	<p slot="summary">
+		Developing a large .NET SOA based application for Kobo e-commerce
+	</p>
+	<ul slot="highlights">
+		<li>Integration of various payment gateways</li>
+		<li>Executing QA roles</li>
+	</ul>
+</Job>
+
+{print && <p style="page-break-before: always;">&nbsp;</p>}
+
+<Job
+	company="Gamerock"
+	from="2015"
+	to="2016"
+	site="https://kobo.com/"
+	role="Scala Developer"
+>
+	<p slot="summary">
+		Extending existing solution for biggest (at the time) Polish Twitch
+		competitor
+	</p>
+</Job>
+
+<Job
+	company="Kainos"
+	from="2012"
+	to="2015"
+	site="https://kainos.com/"
+	role="Software Engineer"
+	last="true"
+>
+	<p slot="summary">
+		Took part in various gov.uk projects and NI public sector
+	</p>
+	<ul slot="highlights">
+		<li>
+			Integration and consulting of SSO solution across couple projects in
+			the british gov
+		</li>
+		<li>Mentoring more junior devs</li>
+	</ul>
+</Job>

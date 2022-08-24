@@ -1,0 +1,21 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import CV from "../components/CV.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../config";
+---
+
+<!DOCTYPE html>
+<html lang="en-us">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<CV print="true" />
+		<script type="text/javascript">
+			print();
+			setTimeout(() => {
+				window.location = "/";
+			}, 1500);
+		</script>
+	</body>
+</html>

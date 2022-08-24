@@ -3,11 +3,21 @@
   https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
+
+
+ @font-face {
+	font-family: 'SylexiadSerifMedium';
+	src: url('/fonts/SylexiadSerifMedium.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+  }
+
 body {
-	font-family: Verdana, sans-serif;
+	font-family: 'SylexiadSerifMedium', sans-serif;
 	margin: auto;
 	padding: 20px;
-	max-width: 65ch;
+	max-width: 80ch;
 	text-align: left;
 	background-color: #fff;
 	word-wrap: break-word;

@@ -2,6 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import CV from '../components/CV.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../config';
 ---
 
@@ -13,14 +14,12 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../config';
 	<body>
 		<Header title={SITE_TITLE} />
 		<main>
-			<h1>Hello again</h1>
 			<p>
-				I came back to my blog after 5 years, and thought I will upgrade it.
+				This site works as my blog and my CV
 			</p>
-			<p>
-				I wasn't particularly happy with the tech-stack for my blog, but recently I've heard about <a href="https://astro.build">Astro</a> and seemed like something I want to use for my blog!
-			</p>
-			<p>Previosly I used Jekyll. I have no complaints, but Astro just is more "engineeree". And gives me some more options to make this blog more interactive</p>
+			
+			<CV/>
+			<a href="/print">Print it</a>
 		
 		</main>
 		<Footer />
