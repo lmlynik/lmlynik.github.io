@@ -3,7 +3,6 @@ layout: "../../layouts/BlogPost.astro"
 title: "Scala and C# comparison"
 description: "Lorem ipsum dolor sit amet"
 pubDate: "2017-07-27 16:00:04 +0200"
-heroImage: "/placeholder-hero.jpg"
 ---
 
 So why do we need another "Scala for C# developers" or vice versa? Well, at this moment I didn't find any post which would bite deeper in the comparison. 
@@ -53,7 +52,7 @@ This is also a very verbose way of declaring things in Scala.
 
 In C# it looks quite similar
 
-```cshard```
+```csharp
 var people =  new List<Person> {
   new Person(.....)......
 }
