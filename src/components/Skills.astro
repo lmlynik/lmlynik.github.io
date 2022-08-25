@@ -1,4 +1,86 @@
 ---
+import Skill from "./Skill.astro";
+
+export interface Props {
+	expand?: boolean;
+}
+
+const { expand } = Astro.props as Props;
+
+const skills = [
+	{
+		name: "Scala",
+		el: [
+			{ name: "Akka" },
+			{ name: "Play" },
+			{ name: "ZIO" },
+			{ name: "Cats" },
+			{ name: "Monix" },
+		],
+	},
+	{
+		name: "Java",
+		el: [
+			{ name: "Akka" },
+			{ name: "Play for Java" },
+			{ name: "Spring Boot" },
+			{ name: "Spring Cloud" },
+			{ name: "JOOQ" },
+			{ name: "JPA" },
+		],
+	},
+	{
+		name: "Architecture",
+		el: [
+			{ name: "Distributed Computing" },
+			{ name: "Event Sourcing" },
+			{ name: "Domain Driven Design" },
+			{ name: "CQRS" },
+			{ name: "Scalling out systems" },
+		],
+	},
+	{
+		name: ".NET",
+		el: [
+			{ name: "C#" },
+			{ name: "ASP.MVC" },
+			{ name: "Azure Functions" },
+			{ name: "Entity framework" },
+		],
+	},
+	{
+		name: "Web dev",
+		el: [
+			{ name: "Javascript" },
+			{ name: "Typescript" },
+			{ name: "Angular" },
+			{ name: "GraphQL" },
+			{ name: "Astro js" },
+		],
+	},
+	{
+		name: "Cloud",
+		el: [
+			{ name: "Kafka" },
+			{ name: "Docker" },
+			{ name: "Kubernetes" },
+			{ name: "AWS" },
+			{ name: "Azure" },
+			{ name: "Google Cloud" },
+			{ name: "Keycloak" },
+		],
+	},
+	{
+		name: "Databases",
+		el: [
+			{ name: "PostgreSQL" },
+			{ name: "DynamoDB" },
+			{ name: "Cassandra" },
+			{ name: "Mongo" },
+			{ name: "Redis" },
+		],
+	},
+];
 ---
 
 <style>
@@ -29,6 +111,11 @@
 </style>
 
 <section class="columns">
+	{skills.map((e) => <Skill name={e.name} el={e.el} expand={expand} />)}
+</section>
+
+<!-- 
+<section class="columns">
 	<div class="tech">
 		<h2>Scala</h2>
 		<ul>
@@ -54,6 +141,7 @@
 		<ul>
 			<li>Distributed Computing</li>
 			<li>Event Sourcing</li>
+			<li>Domain Driven Design</li>
 			<li>CQRS</li>
 			<li>Scalling out systems</li>
 		</ul>
@@ -101,4 +189,4 @@
 			<li>Keycloak</li>
 		</ul>
 	</div>
-</section>
+</section> -->

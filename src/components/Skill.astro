@@ -1,0 +1,81 @@
+---
+export interface Props {
+	name: string;
+	el?: Props[];
+	expand?: boolean;
+}
+
+const { name, el, expand } = Astro.props as Props;
+---
+
+<style>
+	input[type="checkbox"] {
+		display: none;
+	}
+	.wrap-collabsible {
+		/* margin: 1.2rem 0; */
+	}
+	.lbl-toggle {
+		display: block;
+		font-size: 1.2rem;
+		text-transform: uppercase;
+		padding: 1rem;
+		cursor: pointer;
+		border-radius: 7px;
+		transition: all 0.25s ease-out;
+	}
+	.lbl-toggle:hover {
+	}
+	.lbl-toggle::before {
+		content: " ";
+		display: inline-block;
+		border-top: 5px solid transparent;
+		border-bottom: 5px solid transparent;
+		border-left: 5px solid currentColor;
+		margin-right: 0.7rem;
+		transform: translateY(-2px);
+		transition: transform 0.2s ease-out;
+	}
+	.toggle:checked + .lbl-toggle::before {
+		transform: rotate(90deg) translateX(-3px);
+	}
+	.collapsible-content {
+		max-height: 0px;
+		overflow: hidden;
+		transition: max-height 0.25s ease-in-out;
+	}
+	.toggle:checked + .lbl-toggle + .collapsible-content {
+		max-height: 350px;
+	}
+	.toggle:checked + .lbl-toggle {
+		border-bottom-right-radius: 0;
+		border-bottom-left-radius: 0;
+	}
+	.collapsible-content .content-inner {
+	}
+	.collapsible-content p {
+		margin-bottom: 0;
+	}
+
+	.tech {
+		flex: 33.33%;
+	}
+
+	.tech ul {
+		margin-block-start: 0px;
+		list-style-type: none;
+	}
+</style>
+
+<div class="wrap-collabsible tech">
+	<input id={name} class="toggle" type="checkbox" checked={expand} />
+	<label for={name} class="lbl-toggle">{name}</label><div
+		class="collapsible-content"
+	>
+		<div class="content-inner">
+			<ul>
+				{el && el.map((e) => <li>{e.name}</li>)}
+			</ul>
+		</div>
+	</div>
+</div>
