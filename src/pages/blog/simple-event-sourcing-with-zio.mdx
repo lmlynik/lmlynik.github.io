@@ -1,0 +1,237 @@
+---
+layout: "../../layouts/BlogPost.astro"
+title: "Simple event sourcing with ZIO"
+description: "Simple event sourcing with ZIO"
+pubDate: "2022-10-01 16:00:00 +0200"
+draft: "true"
+---
+
+# The why's
+
+In the Scala space for the longest time Akka was the prominent toolkit for implementing many important patterns and solutions for various use cases.
+One of the most prominent and synonymous in Scala is [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html) implemented via [Akka-Persistence](https://doc.akka.io/docs/akka/current/typed/persistence.html).
+
+The recent changes in [Akka licensing](https://www.lightbend.com/blog/why-we-are-changing-the-license-for-akka), might be an impulse which will cause some developers to reconsider using Akka if they need to use Event Sourcing. There are obvious alternatives like [Axon](https://github.com/AxonFramework/AxonFramework) or [Endless4s](https://endless4s.github.io/).
+Both solutions look great, but what if we want something native to ZIO.
+
+Let's check how we could implement a simple Event sourcing solution with ZIO 2.0
+
+### It's "simple"
+
+The concept is pretty "simple", as it is modelling business entities as a journal of ordered, atomic changes which are folded into a single entity state.
+
+This way we can rollback in time and see individual changes in the entity, replay events if we there is a use case(like Analytics).
+
+#### Why Akka is special here?
+
+Akka is use in production for many years and solved many operation issues, lets try to tackle couple of them like:
+
+##### Passivation
+
+Passivation allows to shutdown and clean up the entity from memory if its not needed, when there is a need to interact with it, it will be reloaded.
+
+##### Snapshotting
+
+At some point an entity can have millions of events, reloading this amount of events might be unfeasible, hence we can use snapshotting to capture a state of an entity from a recent time, omitting older events.
+
+We can for example combine those 2 features i.e. make a snapshot on passivation, to be able to load the entity with just getting the last snapshot.
+
+# Brewing you own event sourced entity
+
+As said, the entity is the aggregate of events, lets say we will use a `ZStream`
+
+```scala
+
+def handleEvent(state: State, event: Event): UIO[State] = ???
+
+ZStream(evt1, evt2, evt3, ..., evtX).runFoldZIO(emptyState){
+  case(state, event) => handleEvent(state, event)
+}
+```
+
+This introduces the basic concept of with just using a `ZStream`
+
+Ok, but lets say we want to make something more robust and extendable, lets model this from the API level and lets say we want to inspire ourselves with Akka-Persistence.
+
+```scala
+object MyPersistentBehavior {
+
+  enum Command {
+    case NextNumber(value: Long)
+    case Clear
+  }
+
+  enum Event {
+    case NextNumberAdded(value: Long)
+    case Cleared
+  }
+
+  final case class State(numbers: List[Long] = Nil)
+
+  def apply(id: String) =
+    EventSourcedEntity[Command, Event, State](
+      persistenceId = id,
+      emptyState = State(),
+      commandHandler = (state, cmd) => ???,
+      eventHandler = (state, evt) => ???
+    )
+}
+```
+
+A keen eye can immediately notice the inspiration. We handle the provide the `persistenceId` the empty state and handlers for commands and events.
+
+We just mentioned events, so where commands come from?
+
+Well, commands are basically... commands issued from the outside world, if we want to Add a number to the list, clear the list, or get the current list of numbers, we would send a command to the entity.
+
+These handlers we could model simple as 
+
+```scala
+commandHandler: (STATE, COMMAND) => URIO[Any, EVENT],
+eventHandler: (STATE, EVENT) => URIO[Any, STATE]
+```
+
+Now we see that a commandHandlers uses the command and the current state to create an event.
+While the eventHandler uses the event and current state to create a new state.
+
+For now, lets say that only Events can update the STATE, and only Command can create an event.
+
+```
+COMMAND => EVENT => STATE
+```
+
+So what do we need to make a fully functional entity? And what ZIO gives us which can help?
+
+*First* of, we need to store the current state. That is easy, we can use `Ref.Synchronized`.
+
+```scala
+currentState <- Ref.Synchronized.make(emptyState)
+```
+
+*Second*, we to load the existing event, if we have any. Here we need to introduce a new concept -> Journaling. We can model a journal in a simple way, using here before mentioned `ZStream`
+
+```scala
+trait Journal[EVENT] {
+  def persist(id: String, event: EVENT): IO[Nothing, Unit]
+
+  def load(id: String): ZStream[Any, Nothing, EVENT]
+}
+```
+
+`load` creates a `ZStream` which provides the existing events, and `persist` persists the Event which might be a result of the command.
+
+Now we need to go back and update our handlers to take those facts into consideration
+
+```scala
+commandHandler: (STATE, COMMAND) => URIO[Journal[EVENT], EVENT],
+```
+
+As now we need to be aware of the Journal, for which commandHandler will persist Events back to the Journal.
+
+And calling the journal now is just calling `runFoldZIO` and updating the `Ref`
+
+```scala
+   def journalPlayback(
+      journal: Journal[EVENT],
+      currentState: Ref.Synchronized[State]
+    ) =
+      currentState.updateAndGetZIO { st =>
+        journal
+          .load(persistenceId)
+          .runFoldZIO(st) { case (state, event) =>
+            eventHandler(state, event)
+          }
+      }
+```
+
+*Third* is we need to capture incoming commands and create an event out of it.
+
+We want to constantly react to command in a synchronous order.
+
+For that we can use the ZIO `Queue`
+
+```scala
+commandQueue <- Queue.unbounded[COMMAND]
+```
+
+and consume the queue indefinitely
+
+```scala
+    def commandDispatch(
+      queue: Queue[COMMAND],
+      journal: Journal[EVENT],
+      currentState: Ref.Synchronized[STATE]
+    ) =
+      currentState.updateAndGetZIO { state =>
+        queue.take
+          .flatMap(cmd => commandHandler(state, cmd))
+          .flatMap(event => eventHandler(state, event))
+      }.forever.fork
+
+```
+
+We create a `Fiber` which continuously updates the state with the created event.
+
+And the last step, we create a handle for the outside world to interact with it
+
+```scala
+ yield new EntityRef[COMMAND, STATE] {
+   override def state: UIO[STATE] = currentState.get.map(_._2)
+
+   override def send(command: COMMAND): UIO[Unit] = commandQueue.offer(command).unit
+ }
+```
+
+The `state` here is a bit against good practice but good for debugging our idea.
+
+`send` takes in the command and passes it into the before mentioned command queue.
+
+Now lets revisit our entity implementation to se how we can we implement the handlers
+
+```scala
+      commandHandler = (state, cmd) =>
+        cmd match
+          case Command.NextNumber(value) => ZIO.succeed(Event.NextNumberAdded(value))
+          case Command.Clear             => ZIO.succeed(Event.Cleared)
+      ,
+      eventHandler = (state, evt) =>
+        evt match
+          case Event.NextNumberAdded(value) =>
+            ZIO
+              .succeed(state.copy(numbers = state.numbers :+ value))
+          case Event.Cleared                => ZIO.succeed(State())
+    )
+}
+```
+
+And interacting with our entity
+
+```scala
+    for {
+      entity  <- MyPersistentBehavior("test")
+      _       <- ZIO.foreach(1 to 100)(n => entity.send(Command.NextNumber(n)))
+      numbers <- entity.state
+    } yield numbers
+```
+
+### Summarizing
+
+We created basic of Event Souring with just couple of ZIOs and there is potential here for making this into an interesting alternative for Akka-Persistence.
+
+### Drawbacks?
+
+A lot.
+
+It's obvious currently that creating 2 entities on the same machine will cause corruption of the journal.
+This concern could be alleviated by [ShardCake](https://github.com/devsisters/shardcake) and using the PersistenceId as ShardId.
+
+We still didn't do snapshots and passivation, I'm hoping to work on that next.
+
+The source for WIP of this library can be found here.
+https://github.com/lmlynik/zio-playground/tree/blog-post-zio-es/zio-event-sourcing
+
+### Was it Simple?
+
+So I keep saying its simple, but its not **easy**. The Lightbend team had years to perfect their solution based on their battle tested actor framework.
+There is still remaining topics like event serialization, schema migration, error handling.
+

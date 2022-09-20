@@ -1,7 +1,7 @@
 ---
 layout: "../../layouts/BlogPost.astro"
 title: "Scala and C# comparison"
-description: "Lorem ipsum dolor sit amet"
+description: "Brief comparison of Scala and C#"
 pubDate: "2017-07-27 16:00:04 +0200"
 ---
 
