@@ -26,15 +26,13 @@ This way we can rollback in time and see individual changes in the entity, repla
 
 Akka is use in production for many years and solved many operation issues, lets try to tackle couple of them like:
 
-##### Passivation
-
-Passivation allows to shutdown and clean up the entity from memory if its not needed, when there is a need to interact with it, it will be reloaded.
-
 ##### Snapshotting
 
 At some point an entity can have millions of events, reloading this amount of events might be unfeasible, hence we can use snapshotting to capture a state of an entity from a recent time, omitting older events.
 
-We can for example combine those 2 features i.e. make a snapshot on passivation, to be able to load the entity with just getting the last snapshot.
+#### Plugable Serialization and storage
+
+Akka provides a robust system to introduce various serialization mechanisms and databases/
 
 # Brewing you own event sourced entity
 
@@ -225,7 +223,7 @@ A lot.
 It's obvious currently that creating 2 entities on the same machine will cause corruption of the journal.
 This concern could be alleviated by [ShardCake](https://github.com/devsisters/shardcake) and using the PersistenceId as ShardId.
 
-We still didn't do snapshots and passivation, I'm hoping to work on that next.
+We still didn't do snapshots, I'm hoping to work on that next.
 
 The source for WIP of this library can be found here.
 https://github.com/lmlynik/zio-playground/tree/blog-post-zio-es/zio-event-sourcing
