@@ -36,7 +36,7 @@ const { print } = Astro.props as Props;
 <div class="heading">
 	<div class="pic">
 		<img
-			src="https://media-exp1.licdn.com/dms/image/C5603AQFpgJY4WOG_Zw/profile-displayphoto-shrink_800_800/0/1517548012868?e=1666828800&v=beta&t=y9TdIQg5dnUC3b282y8neLQaLLfe_cBLIiYXg8y3ESM"
+			src="/img.png"
 		/>
 	</div>
 	<div class="split"></div>
@@ -56,6 +56,25 @@ const { print } = Astro.props as Props;
 <Skills expand={print}/>
 
 {print && <p style="page-break-before: always;">&nbsp;</p>}
+
+<Job
+	company="Whitehat Gaming"
+	from="2022-09"
+	site="https://whitehatgaming.com/"
+	role="Platform Engineer"
+>
+	<p slot="summary">
+		Development and maintenance of the core platform and auxiliary microservices
+	</p>
+	<ul slot="highlights">
+	    <li>Moving service code from Akka to ZIO2</li>
+		<li>Managing deployments with k8s</li>
+		<li>
+			Technical Design of solutions and integration to the current stack
+		</li>
+		<li>Production support</li>
+	</ul>
+</Job>
 
 <Job
 	company="MOIA GMBH"
@@ -84,13 +103,12 @@ const { print } = Astro.props as Props;
 	from="2020-12"
 	to="2021-09"
 	site="https://whitehatgaming.com/"
-	role="Senior Backend Engineer"
+	role="Platform Engineer"
 >
 	<p slot="summary">
-		Development of new payment related products for core business
+		Development and maintenance of the core platform
 	</p>
 	<ul slot="highlights">
-		<li>Introducing Cats and Cats Effect to the team</li>
 		<li>Managing deployments with k8s</li>
 		<li>Extending monitoring solutions using OpenTracing</li>
 		<li>
