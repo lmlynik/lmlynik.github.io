@@ -1,5 +1,5 @@
 ---
-layout: "../../layouts/BlogPost.astro"
+layout: "/src/layouts/BlogPost.astro"
 title: "Scala and C# comparison"
 description: "Brief comparison of Scala and C#"
 pubDate: "2017-07-27 16:00:04 +0200"
