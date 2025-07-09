@@ -15,7 +15,7 @@ permissions:
   id-token: write
 
 jobs:
-  build2:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout your repository using git
@@ -24,7 +24,7 @@ jobs:
         uses: withastro/action@v0
 
   deploy:
-    needs: build2
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
